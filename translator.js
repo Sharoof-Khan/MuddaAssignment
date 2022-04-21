@@ -55,7 +55,7 @@ app.use(express.json())
                     console.log(`Output of ${inp} Translated String is ${verify} From Db`);
                
                 } else {
-                    let result = await translator(inp, 'hi')
+                    let result = await translator(inp, 'hi')    // 1st argument is Input String and 2 nd argument is for languages like English = en,Hindi = hi,Spainesh = es, Arabic = ar etc..
     //  console.log(result,'result');
         let obj = {
 
@@ -71,8 +71,7 @@ app.use(express.json())
         if (err) return console.error(err)
         console.log(`Output Of ${str.input} String is ${str.output} from API`);
     })
-                    
-                }
+     }
 
 
             } catch (err) {
