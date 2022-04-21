@@ -1,6 +1,9 @@
 const express  = require('express')
 const mongoose = require('mongoose');
-const {translate} = require('bing-translate-api')
+const { translate } = require('bing-translate-api');
+
+const app = express();
+
 
 
 mongoose.connect('mongodb://127.0.0.1:27017/mudda')
@@ -12,8 +15,8 @@ db.once('open', function () {
     console.log('Connection Successful');
 
     const translatorSchema = mongoose.Schema({
-        input:{type: String,required: true},
-        output: { type: String, required: true }
+        input:{type: String},
+        output: { type: String, }
     });
 
 const Translator = mongoose.model("string", translatorSchema)
@@ -33,48 +36,59 @@ const Translator = mongoose.model("string", translatorSchema)
 }
 
 //    translator('Hello','hi')
+app.use(express.json())
     const main = async () => {
 
-     let result = await translator('Hello', 'hi')
+        let inp = 'Bad'    //Input
+
+        var verify = null;
+        app.get("/strings", async (req, res) => {
+            try {
+                const data = await Translator.findOne({input:{$eq:inp}}).lean().exec()
+                res.status(200).send({data})
+
+                // console.log(data.output,'data');
+               let verify = data.output
+            //    console.log('verify:', verify)
+                if (verify) {
+        // var str = new Translator({ input: obj.input,output: obj.output })
+                    console.log(`Output of ${inp} Translated String is ${verify} From Db`);
+               
+                } else {
+                    let result = await translator(inp, 'hi')
     //  console.log(result,'result');
-        
-        var str = new Translator({ str: result })
+        let obj = {
+
+        }
+        obj.input = inp;
+        obj.output = result;
+
+        // console.log(obj,'Obj');
+        var str = new Translator({ input: obj.input,output: obj.output })
         
 
         str.save(function (err, str) {
         if (err) return console.error(err)
-        console.log(" Output Of Give Str is ",str.str);
+        console.log(`Output Of ${str.input} String is ${str.output} from API`);
     })
+                    
+                }
+
+
+            } catch (err) {
+                console.error(err)
+                
+            }
+        })
+     
  }
 
     main()
-//    main().then((check) => console.log(check,'Check'))
-    // console.log('translatedStr:', translatedStr)
-    /*var str = new Translator({ str: 'مرحبًا' })
-    console.log('str2:', str)
-    
-    str.save(function (err, str) {
-        if (err) return console.error(err)
-        console.log(str.str + " Saved Translation String");
-    })*/
 
-    /*Translator.find({ "str": "str" }, function (err, translatedStr) {
-        if (err) {
-            console.log(err);
-        }
-    })*/
+    }
+)
     
-//    let s1 = Translator.find().where('str').equals(translatedStr)
-//    console.log('s1:', s1)
 
+app.listen(4400, () => {
+    console.log('Port Listning 4400');
 })
-    
-
-
-// const translatorSchema = new mongoose.Schema({
-//     str:{type:String,required:true}
-// })
-// ra
-// const Translator = mongoose.model("string", translatorSchema)
-
-// const app = express();
