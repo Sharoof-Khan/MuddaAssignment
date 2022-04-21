@@ -1,4 +1,6 @@
-const express  = require('express')
+//  For Runnig the Translotor give in put to translator function which all on line no 60
+
+const express = require('express')
 const mongoose = require('mongoose');
 const { translate } = require('bing-translate-api');
 
